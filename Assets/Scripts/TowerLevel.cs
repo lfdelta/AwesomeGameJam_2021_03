@@ -23,6 +23,7 @@ public class TowerLevel : MonoBehaviour
 
 	void Start()
 	{
+		// Find bounds of all blockout volumes
 		TileBlockoutVolume[] blockouts = FindObjectsOfType<TileBlockoutVolume>();
 		Vector2Int min = blockouts[0].MinTile;
 		Vector2Int max = blockouts[0].MaxTile;
@@ -50,9 +51,7 @@ public class TowerLevel : MonoBehaviour
 		LevelTileSize.y = max.y - min.y + 1;
 		LevelTiles = new TileType[LevelTileSize.x, LevelTileSize.y];
 
-		Debug.LogFormat("World min [{0}, {1}], max [{2}, {3}]", min.x, min.y, max.x, max.y);
-		Debug.LogFormat("LevelTileSize [{0}, {1}]", LevelTileSize.x, LevelTileSize.y);
-
+		// Fill in the logical tile state based on blockout volumes
 		for (int x = 0; x < LevelTileSize.x; ++x)
 		{
 			for (int y = 0; y < LevelTileSize.y; ++y)
@@ -97,6 +96,20 @@ public class TowerLevel : MonoBehaviour
 			default:
 				Debug.LogErrorFormat("IsTileValid found unexpected tile {} at [{}, {}]", t.ToString(), X, Y);
 				return false;
+		}
+	}
+
+	private Sprite GetTileSprite(TileType Type)
+	{
+		switch (Type)
+		{
+			case TileType.TT_Open:
+				return ;
+			case TileType.TT_Undefined:
+				return null;
+			default:
+				Debug.LogErrorFormat("GetTileSprite given unsupported tile type {}", Type.ToString());
+				return null;
 		}
 	}
 }
