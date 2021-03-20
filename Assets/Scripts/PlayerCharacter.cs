@@ -11,7 +11,6 @@ public class PlayerCharacter : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Started");
         Level = FindObjectOfType<TowerLevel>();
         Pos = Level.PlayerSpawns[CharType];
         UpdateWorldPosition();

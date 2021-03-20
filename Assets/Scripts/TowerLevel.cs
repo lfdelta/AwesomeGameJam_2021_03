@@ -67,10 +67,19 @@ public class TowerLevel : MonoBehaviour
 				{
 					if (vol.Type > LevelTiles[x - TileOrigin.x, y - TileOrigin.y])
 					{
-						Debug.LogFormat("[{0}, {1}]", x, y);
 						LevelTiles[x - TileOrigin.x, y - TileOrigin.y] = vol.Type;
 					}
 				}
+			}
+		}
+
+		// Generate visual tiles based on the logical tiles
+		VisualTiles.Initialize();
+		for (int x = 0; x < LevelTileSize.x; ++x)
+		{
+			for (int y = 0; y < LevelTileSize.y; ++y)
+			{
+				VisualTiles.CreateTile(LevelTiles[x, y], TileOrigin.x + x, TileOrigin.y + y);
 			}
 		}
 	}
@@ -96,20 +105,6 @@ public class TowerLevel : MonoBehaviour
 			default:
 				Debug.LogErrorFormat("IsTileValid found unexpected tile {} at [{}, {}]", t.ToString(), X, Y);
 				return false;
-		}
-	}
-
-	private Sprite GetTileSprite(TileType Type)
-	{
-		switch (Type)
-		{
-			case TileType.TT_Open:
-				return ;
-			case TileType.TT_Undefined:
-				return null;
-			default:
-				Debug.LogErrorFormat("GetTileSprite given unsupported tile type {}", Type.ToString());
-				return null;
 		}
 	}
 }

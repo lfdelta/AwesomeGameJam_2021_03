@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[RequireComponent(typeof(RectTransform))]
+[RequireComponent(typeof(Transform))]
 public class TileBlockoutVolume : MonoBehaviour
 {
     public TileType Type;
@@ -18,12 +18,6 @@ public class TileBlockoutVolume : MonoBehaviour
         {
             Debug.LogError("Found TileBlockoutVolume with type TT_Undefined");
         }
-        //Rect rect = GetComponent<RectTransform>().rect;
-        //MinTile.x = Mathf.FloorToInt(rect.position.x / TileUtils.TileSize);
-        //MinTile.y = Mathf.FloorToInt(rect.position.y / TileUtils.TileSize);
-        //MaxTile.x = Mathf.CeilToInt((rect.position.x + rect.width) / TileUtils.TileSize) - 1;
-        //MaxTile.y = Mathf.CeilToInt((rect.position.y + rect.height) / TileUtils.TileSize) - 1;
-
         Transform transf = GetComponent<Transform>();
         MinTile.x = Mathf.FloorToInt(transf.position.x / TileUtils.TileSize);
         MinTile.y = Mathf.FloorToInt(transf.position.y / TileUtils.TileSize);
