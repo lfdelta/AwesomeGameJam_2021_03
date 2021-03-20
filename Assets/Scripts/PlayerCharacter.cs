@@ -7,34 +7,55 @@ public class PlayerCharacter : MonoBehaviour
     public PlayerCharacterType CharType;
 
     private Vector2Int Pos;
+    private TowerLevel Level;
 
     void Start()
     {
-        TowerLevel lvl = FindObjectOfType<TowerLevel>();
-        Pos = lvl.PlayerSpawns[CharType];
+        Debug.Log("Started");
+        Level = FindObjectOfType<TowerLevel>();
+        Pos = Level.PlayerSpawns[CharType];
+        UpdateWorldPosition();
     }
 
     void Update()
     {
+        // TODO: use input system for remappable keys
         if (Input.GetKeyDown(KeyCode.A))
 		{
-            --Pos.x;
-            Debug.Log("Position: " + Pos.x + ", " + Pos.y);
-		}
+            if (Level.IsTileTraversable(CharType, Pos.x - 1, Pos.y))
+            {
+                --Pos.x;
+                UpdateWorldPosition();
+            }
+        }
         if (Input.GetKeyDown(KeyCode.D))
 		{
-            ++Pos.x;
-            Debug.Log("Position: " + Pos.x + ", " + Pos.y);
+            if (Level.IsTileTraversable(CharType, Pos.x + 1, Pos.y))
+            {
+                ++Pos.x;
+                UpdateWorldPosition();
+            }
         }
         if (Input.GetKeyDown(KeyCode.W))
 		{
-            ++Pos.y;
-            Debug.Log("Position: " + Pos.x + ", " + Pos.y);
+            if (Level.IsTileTraversable(CharType, Pos.x, Pos.y + 1))
+            {
+                ++Pos.y;
+                UpdateWorldPosition();
+            }
         }
         if (Input.GetKeyDown(KeyCode.S))
 		{
-            --Pos.y;
-            Debug.Log("Position: " + Pos.x + ", " + Pos.y);
+            if (Level.IsTileTraversable(CharType, Pos.x, Pos.y - 1))
+            {
+                --Pos.y;
+                UpdateWorldPosition();
+            }
         }
+    }
+
+    private void UpdateWorldPosition()
+	{
+        Debug.Log("Position: " + Pos.x + ", " + Pos.y);
     }
 }
