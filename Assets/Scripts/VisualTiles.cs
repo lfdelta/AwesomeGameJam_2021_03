@@ -18,8 +18,8 @@ public class VisualTiles : MonoBehaviour
         TilePrefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/GameObjects/TileSprite.prefab", typeof(GameObject));
 
         Assets = new Dictionary<TileType, Texture2D>();
-        Assets[TileType.TT_Open] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/tile_1.png", typeof(Texture2D));
-        Assets[TileType.TT_Wall] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/wall_1.png", typeof(Texture2D));
+        Assets[TileType.TT_Open] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/tile_1.png", typeof(Texture2D));
+        Assets[TileType.TT_Wall] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/wall_1.png", typeof(Texture2D));
 
         // TODO: add more types here; maybe use an array for each one for randomized options
 

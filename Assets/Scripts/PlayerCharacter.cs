@@ -17,7 +17,7 @@ public class PlayerCharacter : MonoBehaviour
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
 
         // TODO: sprites for different players
-        Texture2D tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/EmptySquare.png", typeof(Texture2D));
+        Texture2D tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/EmptySquare.png", typeof(Texture2D));
         renderer.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.0f, 0.0f), (float)tex.width / 0.8f);
 
         Level = FindObjectOfType<TowerLevel>();
