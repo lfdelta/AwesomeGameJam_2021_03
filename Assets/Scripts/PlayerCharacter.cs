@@ -16,5 +16,25 @@ public class PlayerCharacter : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+		{
+            --Pos.x;
+            Debug.Log("Position: " + Pos.x + ", " + Pos.y);
+		}
+        if (Input.GetKeyDown(KeyCode.D))
+		{
+            ++Pos.x;
+            Debug.Log("Position: " + Pos.x + ", " + Pos.y);
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+		{
+            ++Pos.y;
+            Debug.Log("Position: " + Pos.x + ", " + Pos.y);
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+		{
+            --Pos.y;
+            Debug.Log("Position: " + Pos.x + ", " + Pos.y);
+        }
     }
 }
