@@ -29,8 +29,7 @@ public class PlayerCharacter : MonoBehaviour
                 break;
             case PlayerCharacterType.CT_Fighter:
                 MoveDistPerTurn = 2;
-                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/EmptySquare.png", typeof(Texture2D));
-                renderer.color = Color.blue;
+                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Character/Goblin/goblin_1.png", typeof(Texture2D));
                 break;
             case PlayerCharacterType.CT_Mage:
                 MoveDistPerTurn = 2;
@@ -62,6 +61,11 @@ public class PlayerCharacter : MonoBehaviour
     public void IncrementTurn()
 	{
         TurnStartPos = Pos;
+	}
+
+    public Vector2Int GetPosition()
+	{
+        return Pos;
 	}
 
     void Update()

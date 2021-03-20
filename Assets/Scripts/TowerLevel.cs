@@ -8,10 +8,16 @@ public class TowerLevel : MonoBehaviour
     public Vector2Int FighterSpawn;
     public Vector2Int MageSpawn;
 
+	public int AllowedTurns;
+
     public Dictionary<PlayerCharacterType, Vector2Int> PlayerSpawns;
 	private TileType[,] LevelTiles;
+	private GameObject[,] TileObjects;
 	private Vector2Int TileOrigin;
 	private Vector2Int LevelTileSize;
+
+	private PlayerManager PlayerMgr;
+	private Dictionary<int, List<Vector2Int>> FallingRocks;
 
 	void Awake()
 	{
@@ -20,7 +26,7 @@ public class TowerLevel : MonoBehaviour
 		PlayerSpawns[PlayerCharacterType.CT_Fighter] = FighterSpawn;
 		PlayerSpawns[PlayerCharacterType.CT_Mage] = MageSpawn;
 
-		gameObject.AddComponent<PlayerManager>();
+		PlayerMgr = gameObject.AddComponent<PlayerManager>();
 		gameObject.AddComponent<TurnManager>();
 	}
 
@@ -53,6 +59,7 @@ public class TowerLevel : MonoBehaviour
 		LevelTileSize.x = max.x - min.x + 1;
 		LevelTileSize.y = max.y - min.y + 1;
 		LevelTiles = new TileType[LevelTileSize.x, LevelTileSize.y];
+		TileObjects = new GameObject[LevelTileSize.x, LevelTileSize.y];
 
 		// Fill in the logical tile state based on blockout volumes
 		for (int x = 0; x < LevelTileSize.x; ++x)
@@ -76,13 +83,37 @@ public class TowerLevel : MonoBehaviour
 			}
 		}
 
+		// Gather and seed rocks
+		FallingRocks = new Dictionary<int, List<Vector2Int>>();
+		RockBlockout[] rocks = FindObjectsOfType<RockBlockout>();
+		foreach(RockBlockout r in rocks)
+		{
+			if (r.FallTurn < 1)
+			{
+				LevelTiles[r.TilePos.x - TileOrigin.x, r.TilePos.y - TileOrigin.y] = TileType.TT_Breakable;
+			}
+			else
+			{
+				if (FallingRocks.ContainsKey(r.FallTurn))
+				{
+					FallingRocks[r.FallTurn].Add(r.TilePos);
+				}
+				else
+				{
+					List<Vector2Int> collxn = new List<Vector2Int>();
+					collxn.Add(r.TilePos);
+					FallingRocks[r.FallTurn] = collxn;
+				}
+			}
+		}
+
 		// Generate visual tiles based on the logical tiles
 		VisualTiles.Initialize();
 		for (int x = 0; x < LevelTileSize.x; ++x)
 		{
 			for (int y = 0; y < LevelTileSize.y; ++y)
 			{
-				VisualTiles.CreateTile(LevelTiles[x, y], TileOrigin.x + x, TileOrigin.y + y);
+				TileObjects[x, y] = VisualTiles.CreateTile(LevelTiles[x, y], TileOrigin.x + x, TileOrigin.y + y);
 			}
 		}
 
@@ -120,6 +151,41 @@ public class TowerLevel : MonoBehaviour
 			default:
 				Debug.LogErrorFormat("IsTileValid found unexpected tile {} at [{}, {}]", t.ToString(), X, Y);
 				return false;
+		}
+	}
+
+	public void IncrementTurn(int CompletedTurnNumber)
+	{
+		// Check collisions, then update tiles, for falling rocks
+		if (FallingRocks.ContainsKey(CompletedTurnNumber))
+		{
+			foreach (Vector2Int rockPos in FallingRocks[CompletedTurnNumber])
+			{
+				int x = rockPos.x - TileOrigin.x;
+				int y = rockPos.y - TileOrigin.y;
+				LevelTiles[x, y] = TileType.TT_Breakable;
+				Destroy(TileObjects[x, y]);
+				TileObjects[x, y] = VisualTiles.CreateTile(TileType.TT_Breakable, x, y);
+			}
+			foreach (PlayerCharacter pc in PlayerMgr.GetAllCharacters())
+			{
+				Vector2Int playerPos = pc.GetPosition();
+				foreach (Vector2Int rockPos in FallingRocks[CompletedTurnNumber])
+				{
+					if (rockPos == playerPos)
+					{
+						Debug.Log("GAME OVER!!! Hit by falling rock");
+						// TODO: actually game over
+						return;
+					}
+				}
+			}
+		}
+
+		if (CompletedTurnNumber >= AllowedTurns)
+		{
+			Debug.Log("GAME OVER!!! Out of turns");
+			// TODO: actually game over
 		}
 	}
 }

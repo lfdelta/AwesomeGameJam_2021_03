@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
-    public int TurnCount = 0;
-
+    private int TurnCount = 1;
+    private TowerLevel Level;
     private PlayerCharacter[] PlayerChars;
 
     void Start()
     {
+        Level = FindObjectOfType<TowerLevel>();
         PlayerManager playerMgr = FindObjectOfType<PlayerManager>();
         PlayerChars = playerMgr.GetAllCharacters();
     }
@@ -18,12 +19,18 @@ public class TurnManager : MonoBehaviour
 	{
         if (Input.GetButtonDown("CompleteTurn"))
 		{
+            Debug.Log("Ended turn " + TurnCount);
             ++TurnCount;
             foreach(PlayerCharacter pc in PlayerChars)
 			{
                 pc.IncrementTurn();
 			}
-            // TODO: falling rocks
+            Level.IncrementTurn(TurnCount - 1);
 		}
+	}
+
+    public int GetTurnCount()
+	{
+        return TurnCount;
 	}
 }
