@@ -13,6 +13,7 @@ public class PlayerCharacter : MonoBehaviour
     private TowerLevel Level;
     private bool IsControlled = false;
 
+    private bool HasUsedAction = false;
     private int MoveDistPerTurn;
     private Vector2Int TurnStartPos;
 
@@ -61,6 +62,7 @@ public class PlayerCharacter : MonoBehaviour
     public void IncrementTurn()
 	{
         TurnStartPos = Pos;
+        HasUsedAction = false;
 	}
 
     public Vector2Int GetPosition()
@@ -70,42 +72,26 @@ public class PlayerCharacter : MonoBehaviour
 
     void Update()
     {
-        if (!IsControlled)
+        if (!IsControlled || HasUsedAction)
         {
             return;
         }
 
         if (Input.GetButtonDown("MoveLeft"))
 		{
-            if (CanMoveTo(Pos.x - 1, Pos.y))
-            {
-                --Pos.x;
-                UpdateWorldPosition();
-            }
+            TryMoveToward(Pos.x - 1, Pos.y);
         }
         if (Input.GetButtonDown("MoveRight"))
 		{
-            if (CanMoveTo(Pos.x + 1, Pos.y))
-            {
-                ++Pos.x;
-                UpdateWorldPosition();
-            }
+            TryMoveToward(Pos.x + 1, Pos.y);
         }
         if (Input.GetButtonDown("MoveUp"))
 		{
-            if (CanMoveTo(Pos.x, Pos.y + 1))
-            {
-                ++Pos.y;
-                UpdateWorldPosition();
-            }
+            TryMoveToward(Pos.x, Pos.y + 1);
         }
         if (Input.GetButtonDown("MoveDown"))
 		{
-            if (CanMoveTo(Pos.x, Pos.y - 1))
-            {
-                --Pos.y;
-                UpdateWorldPosition();
-            }
+            TryMoveToward(Pos.x, Pos.y - 1);
         }
     }
 
@@ -113,6 +99,20 @@ public class PlayerCharacter : MonoBehaviour
 	{
         gameObject.transform.position = new Vector3(Pos.x * TileUtils.TileSize, Pos.y * TileUtils.TileSize, 0.0f);
     }
+
+    private void TryMoveToward(int X, int Y)
+	{
+        if (CanMoveTo(X, Y))
+		{
+            Pos.x = X;
+            Pos.y = Y;
+            UpdateWorldPosition();
+		}
+        else if (!HasUsedAction && Level.TryInteract(CharType, Pos.x, Pos.y, X, Y))
+		{
+            HasUsedAction = true;
+		}
+	}
 
     private bool CanMoveTo(int X, int Y)
 	{

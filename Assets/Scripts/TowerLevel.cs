@@ -18,6 +18,7 @@ public class TowerLevel : MonoBehaviour
 
 	private PlayerManager PlayerMgr;
 	private Dictionary<int, List<Vector2Int>> FallingRocks;
+	private Dictionary<Vector2Int, Vector2Int> DoorUnlockDirs;
 
 	void Awake()
 	{
@@ -86,7 +87,7 @@ public class TowerLevel : MonoBehaviour
 		// Gather and seed rocks
 		FallingRocks = new Dictionary<int, List<Vector2Int>>();
 		RockBlockout[] rocks = FindObjectsOfType<RockBlockout>();
-		foreach(RockBlockout r in rocks)
+		foreach (RockBlockout r in rocks)
 		{
 			if (r.FallTurn < 1)
 			{
@@ -105,6 +106,34 @@ public class TowerLevel : MonoBehaviour
 					FallingRocks[r.FallTurn] = collxn;
 				}
 			}
+		}
+
+		// Gather and seed doors
+		DoorUnlockDirs = new Dictionary<Vector2Int, Vector2Int>();
+		DoorBlockout[] doors = FindObjectsOfType<DoorBlockout>();
+		foreach (DoorBlockout d in doors)
+		{
+			LevelTiles[d.TilePos.x - TileOrigin.x, d.TilePos.y - TileOrigin.y] = TileType.TT_Door;
+			Vector2Int unlockFrom = new Vector2Int(0, 0);
+			switch(d.UnlockDirection)
+			{
+				case 0:
+					unlockFrom.x = 1;
+					break;
+				case 1:
+					unlockFrom.y = 1;
+					break;
+				case 2:
+					unlockFrom.x = -1;
+					break;
+				case 3:
+					unlockFrom.y = -1;
+					break;
+				default:
+					Debug.LogErrorFormat("Found door at [{0}, {1}] with invalid UnlockDirection {2}", d.TilePos.x, d.TilePos.y, d.UnlockDirection);
+					break;
+			}
+			DoorUnlockDirs.Add(d.TilePos, d.TilePos + unlockFrom);
 		}
 
 		// Generate visual tiles based on the logical tiles
@@ -140,6 +169,7 @@ public class TowerLevel : MonoBehaviour
 		TileType t = LevelTiles[X - TileOrigin.x, Y - TileOrigin.y];
 		switch (t)
 		{
+			case TileType.TT_Undefined:
 			case TileType.TT_Wall:
 			case TileType.TT_Door:
 			case TileType.TT_Breakable:
@@ -154,6 +184,40 @@ public class TowerLevel : MonoBehaviour
 		}
 	}
 
+	public bool TryInteract(PlayerCharacterType Character, int StartX, int StartY, int EndX, int EndY)
+	{
+		if (EndX < TileOrigin.x || EndY < TileOrigin.y ||
+			EndX >= TileOrigin.x + LevelTileSize.x || EndY >= TileOrigin.y + LevelTileSize.y)
+		{
+			return false;
+		}
+		TileType t = LevelTiles[EndX - TileOrigin.x, EndY - TileOrigin.y];
+		switch (t)
+		{
+			case TileType.TT_Door:
+				if (Character == PlayerCharacterType.CT_Rogue || DoorUnlockDirs[new Vector2Int(EndX, EndY)] == new Vector2Int(StartX, StartY))
+				{
+					ReplaceTileObject(TileType.TT_Open, EndX, EndY);
+					return true;
+				}
+				return false;
+			case TileType.TT_Breakable:
+				if (Character == PlayerCharacterType.CT_Fighter)
+				{
+					ReplaceTileObject(TileType.TT_Open, EndX, EndY);
+					return true;
+				}
+				return false;
+			case TileType.TT_Wall:
+			case TileType.TT_Open:
+			case TileType.TT_MagePassable:
+				return false;
+			default:
+				Debug.LogErrorFormat("TryInteract found unexpected tile {} at [{}, {}]", t.ToString(), EndX, EndY);
+				return false;
+		}
+	}
+
 	public void IncrementTurn(int CompletedTurnNumber)
 	{
 		// Check collisions, then update tiles, for falling rocks
@@ -161,11 +225,7 @@ public class TowerLevel : MonoBehaviour
 		{
 			foreach (Vector2Int rockPos in FallingRocks[CompletedTurnNumber])
 			{
-				int x = rockPos.x - TileOrigin.x;
-				int y = rockPos.y - TileOrigin.y;
-				LevelTiles[x, y] = TileType.TT_Breakable;
-				Destroy(TileObjects[x, y]);
-				TileObjects[x, y] = VisualTiles.CreateTile(TileType.TT_Breakable, x, y);
+				ReplaceTileObject(TileType.TT_Breakable, rockPos.x - TileOrigin.x, rockPos.y - TileOrigin.y);
 			}
 			foreach (PlayerCharacter pc in PlayerMgr.GetAllCharacters())
 			{
@@ -187,5 +247,12 @@ public class TowerLevel : MonoBehaviour
 			Debug.Log("GAME OVER!!! Out of turns");
 			// TODO: actually game over
 		}
+	}
+
+	private void ReplaceTileObject(TileType Type, int X, int Y)
+	{
+		LevelTiles[X, Y] = Type;
+		Destroy(TileObjects[X, Y]);
+		TileObjects[X, Y] = VisualTiles.CreateTile(Type, X, Y);
 	}
 }
