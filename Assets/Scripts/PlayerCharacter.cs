@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
+[RequireComponent(typeof(Transform))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class PlayerCharacter : MonoBehaviour
 {
     public PlayerCharacterType CharType;
@@ -11,6 +14,12 @@ public class PlayerCharacter : MonoBehaviour
 
     void Start()
     {
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+
+        // TODO: sprites for different players
+        Texture2D tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/EmptySquare.png", typeof(Texture2D));
+        renderer.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.0f, 0.0f), (float)tex.width / 0.8f);
+
         Level = FindObjectOfType<TowerLevel>();
         Pos = Level.PlayerSpawns[CharType];
         UpdateWorldPosition();
@@ -56,5 +65,6 @@ public class PlayerCharacter : MonoBehaviour
     private void UpdateWorldPosition()
 	{
         Debug.Log("Position: " + Pos.x + ", " + Pos.y);
+        gameObject.transform.position = new Vector3(Pos.x * TileUtils.TileSize, Pos.y * TileUtils.TileSize, 0.0f);
     }
 }
