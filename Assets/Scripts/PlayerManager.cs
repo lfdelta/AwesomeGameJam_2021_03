@@ -86,4 +86,15 @@ public class PlayerManager : MonoBehaviour
 	{
 		return PlayerChars[ControlledChar];
 	}
+
+	public PlayerCharacter[] GetAllCharacters()
+	{
+		PlayerCharacter[] ret = new PlayerCharacter[PlayerChars.Keys.Count];
+		int i = 0;
+		foreach (GameObject pc in PlayerChars.Values)
+		{
+			ret[i++] = pc.GetComponent<PlayerCharacter>();
+		}
+		return ret;
+	}
 }

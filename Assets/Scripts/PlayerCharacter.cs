@@ -13,6 +13,9 @@ public class PlayerCharacter : MonoBehaviour
     private TowerLevel Level;
     private bool IsControlled = false;
 
+    private int MoveDistPerTurn;
+    private Vector2Int TurnStartPos;
+
     void Start()
     {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
@@ -21,16 +24,20 @@ public class PlayerCharacter : MonoBehaviour
         switch (CharType)
         {
             case PlayerCharacterType.CT_Rogue:
+                MoveDistPerTurn = 3;
                 tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Character/Kobold/kobold_5.png", typeof(Texture2D));
                 break;
             case PlayerCharacterType.CT_Fighter:
+                MoveDistPerTurn = 2;
                 tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/EmptySquare.png", typeof(Texture2D));
                 renderer.color = Color.blue;
                 break;
             case PlayerCharacterType.CT_Mage:
+                MoveDistPerTurn = 2;
                 tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Character/Ghost/ghost_3.png", typeof(Texture2D));
                 break;
             default:
+                MoveDistPerTurn = 0;
                 tex = null;
                 break;
         }
@@ -38,6 +45,7 @@ public class PlayerCharacter : MonoBehaviour
 
         Level = FindObjectOfType<TowerLevel>();
         Pos = Level.PlayerSpawns[CharType];
+        TurnStartPos = Pos;
         UpdateWorldPosition();
     }
 
@@ -51,17 +59,21 @@ public class PlayerCharacter : MonoBehaviour
         IsControlled = true;
 	}
 
+    public void IncrementTurn()
+	{
+        TurnStartPos = Pos;
+	}
+
     void Update()
     {
         if (!IsControlled)
-		{
+        {
             return;
-		}
+        }
 
-        // TODO: use input system for remappable keys
         if (Input.GetButtonDown("MoveLeft"))
 		{
-            if (Level.IsTileTraversable(CharType, Pos.x - 1, Pos.y))
+            if (CanMoveTo(Pos.x - 1, Pos.y))
             {
                 --Pos.x;
                 UpdateWorldPosition();
@@ -69,7 +81,7 @@ public class PlayerCharacter : MonoBehaviour
         }
         if (Input.GetButtonDown("MoveRight"))
 		{
-            if (Level.IsTileTraversable(CharType, Pos.x + 1, Pos.y))
+            if (CanMoveTo(Pos.x + 1, Pos.y))
             {
                 ++Pos.x;
                 UpdateWorldPosition();
@@ -77,7 +89,7 @@ public class PlayerCharacter : MonoBehaviour
         }
         if (Input.GetButtonDown("MoveUp"))
 		{
-            if (Level.IsTileTraversable(CharType, Pos.x, Pos.y + 1))
+            if (CanMoveTo(Pos.x, Pos.y + 1))
             {
                 ++Pos.y;
                 UpdateWorldPosition();
@@ -85,7 +97,7 @@ public class PlayerCharacter : MonoBehaviour
         }
         if (Input.GetButtonDown("MoveDown"))
 		{
-            if (Level.IsTileTraversable(CharType, Pos.x, Pos.y - 1))
+            if (CanMoveTo(Pos.x, Pos.y - 1))
             {
                 --Pos.y;
                 UpdateWorldPosition();
@@ -96,5 +108,14 @@ public class PlayerCharacter : MonoBehaviour
     private void UpdateWorldPosition()
 	{
         gameObject.transform.position = new Vector3(Pos.x * TileUtils.TileSize, Pos.y * TileUtils.TileSize, 0.0f);
+    }
+
+    private bool CanMoveTo(int X, int Y)
+	{
+        if (!Level.IsTileTraversable(CharType, X, Y))
+		{
+            return false;
+		}
+        return Mathf.Abs(TurnStartPos.x - X) + Mathf.Abs(TurnStartPos.y - Y) <= MoveDistPerTurn;
     }
 }

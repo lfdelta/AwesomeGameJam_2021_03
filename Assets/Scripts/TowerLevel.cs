@@ -21,6 +21,7 @@ public class TowerLevel : MonoBehaviour
 		PlayerSpawns[PlayerCharacterType.CT_Mage] = MageSpawn;
 
 		gameObject.AddComponent<PlayerManager>();
+		gameObject.AddComponent<TurnManager>();
 	}
 
 	void Start()
