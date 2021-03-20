@@ -52,7 +52,7 @@ public class DoorBlockout : MonoBehaviour
         previewText.text = string.Format(" {0}", c);
         previewText.color = Color.red;
         previewText.anchor = TextAnchor.LowerLeft;
-        previewText.fontSize = 8;
+        previewText.fontSize = 16;
         previewText.richText = false;
     }
 }

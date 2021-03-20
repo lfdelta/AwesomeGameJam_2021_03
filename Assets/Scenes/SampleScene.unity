@@ -242,7 +242,7 @@ Transform:
   m_GameObject: {fileID: 367187477}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 5, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1078958234}
   m_RootOrder: 4
@@ -276,7 +276,7 @@ TextMesh:
   m_Anchor: 6
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 8
+  m_FontSize: 16
   m_FontStyle: 0
   m_RichText: 0
   m_Font: {fileID: 0}
@@ -594,6 +594,14 @@ PrefabInstance:
     - target: {fileID: 1106667148668928511, guid: 70d9288bb342541da9a5354f48d749e2, type: 3}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106667148668928511, guid: 70d9288bb342541da9a5354f48d749e2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106667148668928511, guid: 70d9288bb342541da9a5354f48d749e2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1106667148668928511, guid: 70d9288bb342541da9a5354f48d749e2, type: 3}
       propertyPath: m_LocalPosition.x

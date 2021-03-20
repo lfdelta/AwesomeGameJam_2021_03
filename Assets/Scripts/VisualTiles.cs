@@ -21,7 +21,7 @@ public class VisualTiles : MonoBehaviour
         Assets[TileType.TT_Open] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/tile_1.png", typeof(Texture2D));
         Assets[TileType.TT_Wall] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/wall_1.png", typeof(Texture2D));
         Assets[TileType.TT_MagePassable] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/mage_wall_1.png", typeof(Texture2D));
-        Assets[TileType.TT_Breakable] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/mage_wall_1.png", typeof(Texture2D));
+        Assets[TileType.TT_Breakable] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/fallen_rock_1.png", typeof(Texture2D));
         Assets[TileType.TT_Door] = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/mage_wall_1.png", typeof(Texture2D));
 
         // TODO: add more types here; maybe use an array for each one for randomized options

@@ -33,7 +33,7 @@ public class RockBlockout : MonoBehaviour
         previewText.text = string.Format(" {0}", FallTurn);
         previewText.color = Color.red;
         previewText.anchor = TextAnchor.LowerLeft;
-        previewText.fontSize = 8;
+        previewText.fontSize = 16;
         previewText.richText = false;
     }
 }

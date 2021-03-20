@@ -179,7 +179,7 @@ public class TowerLevel : MonoBehaviour
 			case TileType.TT_MagePassable:
 				return Character == PlayerCharacterType.CT_Mage;
 			default:
-				Debug.LogErrorFormat("IsTileValid found unexpected tile {} at [{}, {}]", t.ToString(), X, Y);
+				Debug.LogErrorFormat("IsTileValid found unexpected tile {0} at [{1}, {2}]", t.ToString(), X, Y);
 				return false;
 		}
 	}
@@ -213,7 +213,7 @@ public class TowerLevel : MonoBehaviour
 			case TileType.TT_MagePassable:
 				return false;
 			default:
-				Debug.LogErrorFormat("TryInteract found unexpected tile {} at [{}, {}]", t.ToString(), EndX, EndY);
+				Debug.LogErrorFormat("TryInteract found unexpected tile {0} at [{1}, {2}]", t.ToString(), EndX, EndY);
 				return false;
 		}
 	}
