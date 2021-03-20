@@ -19,6 +19,8 @@ public class TowerLevel : MonoBehaviour
 		PlayerSpawns[PlayerCharacterType.CT_Rogue] = RogueSpawn;
 		PlayerSpawns[PlayerCharacterType.CT_Fighter] = FighterSpawn;
 		PlayerSpawns[PlayerCharacterType.CT_Mage] = MageSpawn;
+
+		gameObject.AddComponent<PlayerManager>();
 	}
 
 	void Start()

@@ -29,7 +29,6 @@ public class VisualTiles : MonoBehaviour
     
     public static GameObject CreateTile(TileType Type, int X, int Y)
     {
-        Debug.LogFormat("{0}, {1}", X, Y);
         if (!Initialized)
 		{
             return null;

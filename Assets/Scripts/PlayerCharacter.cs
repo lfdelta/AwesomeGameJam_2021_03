@@ -11,24 +11,57 @@ public class PlayerCharacter : MonoBehaviour
 
     private Vector2Int Pos;
     private TowerLevel Level;
+    private bool IsControlled = false;
 
     void Start()
     {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
 
         // TODO: sprites for different players
-        Texture2D tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/EmptySquare.png", typeof(Texture2D));
-        renderer.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.0f, 0.0f), (float)tex.width / 0.8f);
+        Texture2D tex;
+        switch (CharType)
+        {
+            case PlayerCharacterType.CT_Rogue:
+                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Character/Kobold/kobold_5.png", typeof(Texture2D));
+                break;
+            case PlayerCharacterType.CT_Fighter:
+                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/EmptySquare.png", typeof(Texture2D));
+                renderer.color = Color.blue;
+                break;
+            case PlayerCharacterType.CT_Mage:
+                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/EmptySquare.png", typeof(Texture2D));
+                renderer.color = Color.green;
+                break;
+            default:
+                tex = null;
+                break;
+        }
+        renderer.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.0f, 0.0f), tex.width);
 
         Level = FindObjectOfType<TowerLevel>();
         Pos = Level.PlayerSpawns[CharType];
         UpdateWorldPosition();
     }
 
+    public void RemoveControl()
+	{
+        IsControlled = false;
+	}
+
+    public void AcquireControl()
+	{
+        IsControlled = true;
+	}
+
     void Update()
     {
+        if (!IsControlled)
+		{
+            return;
+		}
+
         // TODO: use input system for remappable keys
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetButtonDown("MoveLeft"))
 		{
             if (Level.IsTileTraversable(CharType, Pos.x - 1, Pos.y))
             {
@@ -36,7 +69,7 @@ public class PlayerCharacter : MonoBehaviour
                 UpdateWorldPosition();
             }
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetButtonDown("MoveRight"))
 		{
             if (Level.IsTileTraversable(CharType, Pos.x + 1, Pos.y))
             {
@@ -44,7 +77,7 @@ public class PlayerCharacter : MonoBehaviour
                 UpdateWorldPosition();
             }
         }
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetButtonDown("MoveUp"))
 		{
             if (Level.IsTileTraversable(CharType, Pos.x, Pos.y + 1))
             {
@@ -52,7 +85,7 @@ public class PlayerCharacter : MonoBehaviour
                 UpdateWorldPosition();
             }
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetButtonDown("MoveDown"))
 		{
             if (Level.IsTileTraversable(CharType, Pos.x, Pos.y - 1))
             {
@@ -64,7 +97,6 @@ public class PlayerCharacter : MonoBehaviour
 
     private void UpdateWorldPosition()
 	{
-        Debug.Log("Position: " + Pos.x + ", " + Pos.y);
         gameObject.transform.position = new Vector3(Pos.x * TileUtils.TileSize, Pos.y * TileUtils.TileSize, 0.0f);
     }
 }
