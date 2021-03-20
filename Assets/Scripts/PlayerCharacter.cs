@@ -17,7 +17,6 @@ public class PlayerCharacter : MonoBehaviour
     {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
 
-        // TODO: sprites for different players
         Texture2D tex;
         switch (CharType)
         {
@@ -29,8 +28,7 @@ public class PlayerCharacter : MonoBehaviour
                 renderer.color = Color.blue;
                 break;
             case PlayerCharacterType.CT_Mage:
-                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/EmptySquare.png", typeof(Texture2D));
-                renderer.color = Color.green;
+                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Character/Ghost/ghost_3.png", typeof(Texture2D));
                 break;
             default:
                 tex = null;

@@ -84,6 +84,18 @@ public class TowerLevel : MonoBehaviour
 				VisualTiles.CreateTile(LevelTiles[x, y], TileOrigin.x + x, TileOrigin.y + y);
 			}
 		}
+
+		// Set camera to view everything at once
+		float horizSize = (max.x - min.x);
+		float vertSize = (max.y - min.y);
+		float camBuffer = TileUtils.TileSize;
+		float camVertSize = Mathf.Max(vertSize, horizSize / Camera.main.aspect) / 2.0f;
+		Camera.main.orthographicSize = camVertSize + camBuffer;
+
+		Camera.main.transform.position = new Vector3(
+			((max.x + min.x) * TileUtils.TileSize + camBuffer)/ 2.0f,
+			((max.y + min.y) * TileUtils.TileSize + camBuffer) / 2.0f,
+			-10.0f);
 	}
 
 	public bool IsTileTraversable(PlayerCharacterType Character, int X, int Y)
