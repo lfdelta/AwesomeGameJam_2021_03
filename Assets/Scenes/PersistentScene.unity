@@ -833,6 +833,7 @@ MonoBehaviour:
   TowerLevels:
   - Tutorial_ClearLevel
   - Tester
+  - Tutorial_Rocks
   - SampleScene
   - SampleScene2
   UIManager: {fileID: 0}
