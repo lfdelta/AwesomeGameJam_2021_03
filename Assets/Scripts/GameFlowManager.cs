@@ -5,30 +5,37 @@ using UnityEngine.SceneManagement;
 
 public class GameFlowManager : MonoBehaviour
 {
-    public string MenuScene;
     public string[] TowerLevels;
     public GameUIManager UIManager;
 
     private int CurrLevel = 0;
+    private bool IsGameOver = false;
+
+    public static bool GetIsGameOver()
+	{
+        return FindObjectOfType<GameFlowManager>().IsGameOver;
+	}
 
     void Start()
 	{
-        // TODO: set up menu screen
         UIManager = FindObjectOfType<GameUIManager>();
-        EnterGameFromMenu();
+        UIManager.EnterMainMenu();
     }
 
     public void EnterGameFromMenu()
 	{
+        IsGameOver = false;
+        UIManager.EndGameOver();
+        UIManager.ExitMainMenu();
         CurrLevel = 0;
         SceneManager.LoadScene(TowerLevels[0], LoadSceneMode.Additive);
-        UIManager.BaseCanvas.worldCamera = Camera.main;
-        // TODO: any intro stuff
-	}
+    }
 
     public void ReturnToMenu()
 	{
-        StartCoroutine(SwapLevel(TowerLevels[CurrLevel], MenuScene));
+        IsGameOver = false;
+        UIManager.EnterMainMenu();
+        SceneManager.UnloadSceneAsync(TowerLevels[CurrLevel]);
     }
 
     public void MoveToNextLevel()
@@ -44,20 +51,22 @@ public class GameFlowManager : MonoBehaviour
 		}
 	}
 
+    public void RestartLevel()
+	{
+        IsGameOver = false;
+        UIManager.EndGameOver();
+        StartCoroutine(SwapLevel(TowerLevels[CurrLevel], TowerLevels[CurrLevel]));
+	}
+
     private IEnumerator SwapLevel(string Old, string New)
 	{
-        // TODO: loading screen
+        // TODO: loading screen/transition
         AsyncOperation asyncSceneOp = SceneManager.UnloadSceneAsync(Old);
         while (!asyncSceneOp.isDone)
 		{
             yield return null;
 		}
         SceneManager.LoadSceneAsync(New, LoadSceneMode.Additive);
-        while (!asyncSceneOp.isDone)
-		{
-            yield return null;
-		}
-        UIManager.BaseCanvas.worldCamera = Camera.main;
     }
 
     private void GameWon()
@@ -65,11 +74,13 @@ public class GameFlowManager : MonoBehaviour
         // TODO: actual display
         Debug.Log("YOU WON THE GAME!!! NICE WORK");
 
-        StartCoroutine(SwapLevel(TowerLevels[TowerLevels.Length - 1], MenuScene));
+        --CurrLevel; // Unload the right scene
+        ReturnToMenu();
 	}
 
     public void GameOver(string Reason)
 	{
+        IsGameOver = true;
         UIManager.StartGameOver(Reason);
     }
 }

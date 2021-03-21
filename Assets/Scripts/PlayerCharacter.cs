@@ -206,7 +206,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void Update()
     {
-        if (!IsControlled || HasUsedAction)
+        if (!IsControlled || HasUsedAction || GameFlowManager.GetIsGameOver())
         {
             return;
         }

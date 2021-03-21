@@ -39,6 +39,10 @@ public class PlayerManager : MonoBehaviour
 
 	void Update()
 	{
+		if (GameFlowManager.GetIsGameOver())
+		{
+			return;
+		}
 		if (Input.GetButtonDown("SwitchRogue") && ControlledChar != PlayerCharacterType.CT_Rogue)
 		{
 			ChangeCharacter(PlayerCharacterType.CT_Rogue);

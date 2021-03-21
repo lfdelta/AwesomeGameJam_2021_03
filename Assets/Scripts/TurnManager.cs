@@ -17,6 +17,10 @@ public class TurnManager : MonoBehaviour
 
     void Update()
 	{
+        if (GameFlowManager.GetIsGameOver())
+		{
+            return;
+		}
         if (Input.GetButtonDown("CompleteTurn"))
 		{
             Debug.Log("Ended turn " + TurnCount);

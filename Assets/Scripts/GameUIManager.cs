@@ -8,19 +8,31 @@ public class GameUIManager : MonoBehaviour
 	public Canvas BaseCanvas;
 	public GameObject GameOverRoot;
 	public Text GameOverText;
+	public GameObject MenuRoot;
 
 	private float AnimateInTime = 1.0f;
 
-	void Start()
+	public void EnterMainMenu()
 	{
 		GameOverRoot.SetActive(false);
+		MenuRoot.SetActive(true);
+	}
+
+	public void ExitMainMenu()
+	{
+		MenuRoot.SetActive(false);
 	}
 
     public void StartGameOver(string Reason)
 	{
 		GameOverRoot.SetActive(true);
-		GameOverText.text = string.Format("Game over!\n{0}", Reason);
+		GameOverText.text = Reason;
 		StartCoroutine(AnimateInGameOver());
+	}
+
+	public void EndGameOver()
+	{
+		GameOverRoot.SetActive(false);
 	}
 
 	private IEnumerator AnimateInGameOver()

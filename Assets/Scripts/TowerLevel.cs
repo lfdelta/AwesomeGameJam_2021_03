@@ -258,7 +258,7 @@ public class TowerLevel : MonoBehaviour
 				{
 					if (rockPos == playerPos)
 					{
-						FindObjectOfType<GameFlowManager>().GameOver(string.Format("{0} hit by a falling rock!",
+						FindObjectOfType<GameFlowManager>().GameOver(string.Format("{0} was hit by a falling rock!",
 							PlayerCharacterUtils.GetTypeString(pc.CharType)));
 						return;
 					}
@@ -268,7 +268,7 @@ public class TowerLevel : MonoBehaviour
 
 		if (CompletedTurnNumber >= AllowedTurns)
 		{
-			FindObjectOfType<GameFlowManager>().GameOver("Out of turns!");
+			FindObjectOfType<GameFlowManager>().GameOver("The tower crumbled before you could escape!");
 		}
 	}
 
