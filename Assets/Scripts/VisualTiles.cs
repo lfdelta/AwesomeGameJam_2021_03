@@ -29,31 +29,25 @@ public class VisualTiles : MonoBehaviour
         Assets[TileType.TT_MagePassable] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/mage_wall_1.png", typeof(Texture2D)) };
         Assets[TileType.TT_Breakable] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/fallen_rock_1.png", typeof(Texture2D)) };
         Assets[TileType.TT_Door] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/door_front_view_1.png", typeof(Texture2D)) };
-        Assets[TileType.TT_LevelEnd] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/EmptySquare.png", typeof(Texture2D)) };
-
-        // TODO: add more types here; maybe use an array for each one for randomized options
+        Assets[TileType.TT_LevelEnd] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/exit_1.png", typeof(Texture2D)) };
 
         WalkableTileAsset = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/walkable_tile_overlay.png", typeof(Texture2D));
-
         Initialized = true;
 	}
 
-    
     public static GameObject CreateTile(TileType Type, int X, int Y)
     {
         if (!Initialized)
-		{
+        {
             return null;
-		}
-
+        }
         GameObject tile = Instantiate(TilePrefab, new Vector3(X * TileUtils.TileSize, Y * TileUtils.TileSize, 0.0f), Quaternion.identity);
         Texture2D[] texPool = Assets[Type];
         Texture2D tex = texPool[Random.Range(0, texPool.Length)];
         SpriteRenderer sprite = tile.GetComponent<SpriteRenderer>();
-        sprite.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.0f,0.0f), tex.width);
+        sprite.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.0f, 0.0f), tex.width);
         return tile;
     }
-
 
     public static GameObject CreateTileOverlay()
 	{
@@ -61,7 +55,6 @@ public class VisualTiles : MonoBehaviour
         {
             return null;
         }
-
         GameObject tile = Instantiate(TilePrefab, Vector3.zero, Quaternion.identity);
         Texture2D tex = WalkableTileAsset;
         SpriteRenderer sprite = tile.GetComponent<SpriteRenderer>();

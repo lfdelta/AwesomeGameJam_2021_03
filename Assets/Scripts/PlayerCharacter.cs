@@ -87,6 +87,9 @@ public class PlayerCharacter : MonoBehaviour
         {
             GenerateWalkableTiles();
         }
+
+        // TODO: prevent 'ghost' inaccessible tiles, like through a thin wall
+
         Color c;
         switch (CharType)
         {
@@ -108,9 +111,11 @@ public class PlayerCharacter : MonoBehaviour
         WalkableTileOverlays[0].GetComponent<SpriteRenderer>().color = c;
         WalkableTileOverlays[0].transform.position = new Vector3(TurnStartPos.x * TileUtils.TileSize, TurnStartPos.y * TileUtils.TileSize, z);
         int i = 1;
+        const float maxAlpha = 1.0f;
+        const float minAlpha = 0.4f;
         for (int k = 1; k <= MoveDistPerTurn; ++k)
         {
-            c.a = 1.0f - (float)k / (float)(MoveDistPerTurn + 1);
+            c.a = maxAlpha - (maxAlpha - minAlpha) * (float)k / (float)(MoveDistPerTurn);
             for (int x = k; x > 0; --x)
             {
                 int y = k - x;
