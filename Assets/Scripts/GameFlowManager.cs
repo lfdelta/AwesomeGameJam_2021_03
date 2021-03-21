@@ -25,8 +25,7 @@ public class GameFlowManager : MonoBehaviour
     public void EnterGameFromMenu()
 	{
         IsGameOver = false;
-        UIManager.EndGameOver();
-        UIManager.ExitMainMenu();
+        UIManager.EnterGameplay();
         CurrLevel = 0;
         SceneManager.LoadScene(TowerLevels[0], LoadSceneMode.Additive);
     }
@@ -54,7 +53,7 @@ public class GameFlowManager : MonoBehaviour
     public void RestartLevel()
 	{
         IsGameOver = false;
-        UIManager.EndGameOver();
+        UIManager.ExitGameOver();
         StartCoroutine(SwapLevel(TowerLevels[CurrLevel], TowerLevels[CurrLevel]));
 	}
 

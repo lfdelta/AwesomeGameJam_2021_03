@@ -20,6 +20,8 @@ public class PlayerCharacter : MonoBehaviour
     private GameObject[] WalkableTileOverlays;
     private bool HasStarted = false;
 
+    private GameUIManager UIManager;
+
 	void Start()
     {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
@@ -56,6 +58,8 @@ public class PlayerCharacter : MonoBehaviour
 		{
             DisplayWalkableTiles();
 		}
+
+        UIManager = FindObjectOfType<GameUIManager>();
     }
 
     void OnDestroy()
@@ -90,22 +94,7 @@ public class PlayerCharacter : MonoBehaviour
 
         // TODO: prevent 'ghost' inaccessible tiles, like through a thin wall
 
-        Color c;
-        switch (CharType)
-        {
-            case PlayerCharacterType.CT_Rogue:
-                c = Color.red;
-                break;
-            case PlayerCharacterType.CT_Fighter:
-                c = Color.green;
-                break;
-            case PlayerCharacterType.CT_Mage:
-                c = Color.blue;
-                break;
-            default:
-                c = Color.white;
-                break;
-        }
+        Color c = PlayerCharacterUtils.GetTypeColor(CharType);
         float z = transform.position.z - 0.1f;
         WalkableTileOverlays[0].SetActive(true);
         WalkableTileOverlays[0].GetComponent<SpriteRenderer>().color = c;
@@ -192,16 +181,26 @@ public class PlayerCharacter : MonoBehaviour
     public void IncrementTurn()
 	{
         TurnStartPos = Pos;
+        bool prevUsedAction = HasUsedAction;
         HasUsedAction = false;
         if (IsControlled)
-		{
+        {
             DisplayWalkableTiles();
-		}
-	}
+            if (prevUsedAction)
+            {
+                UIManager.SetControlledCharacter(this);
+            }
+        }
+    }
 
     public Vector2Int GetPosition()
 	{
         return Pos;
+	}
+
+    public bool GetHasUsedAction()
+	{
+        return HasUsedAction;
 	}
 
     void Update()
@@ -245,6 +244,7 @@ public class PlayerCharacter : MonoBehaviour
         else if (!HasUsedAction && Level.TryInteract(CharType, Pos.x, Pos.y, X, Y))
 		{
             HasUsedAction = true;
+            UIManager.SetControlledCharacter(this);
 		}
 	}
 

@@ -7,12 +7,15 @@ public class TurnManager : MonoBehaviour
     private int TurnCount = 1;
     private TowerLevel Level;
     private PlayerCharacter[] PlayerChars;
+    private GameUIManager UIManager;
 
     void Start()
     {
         Level = FindObjectOfType<TowerLevel>();
         PlayerManager playerMgr = FindObjectOfType<PlayerManager>();
         PlayerChars = playerMgr.GetAllCharacters();
+        UIManager = FindObjectOfType<GameUIManager>();
+        UIManager.SetTurn(TurnCount, Level.AllowedTurns);
     }
 
     void Update()
@@ -41,6 +44,7 @@ public class TurnManager : MonoBehaviour
             else
             {
                 ++TurnCount;
+                UIManager.SetTurn(TurnCount, Level.AllowedTurns);
                 Level.IncrementTurn(TurnCount - 1);
                 foreach (PlayerCharacter pc in PlayerChars)
                 {

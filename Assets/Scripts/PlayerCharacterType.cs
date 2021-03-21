@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public enum PlayerCharacterType
 {
 	CT_Rogue,
@@ -19,6 +21,21 @@ public static class PlayerCharacterUtils
 				return "Ghost";
 			default:
 				return "INVALID";
+		}
+	}
+
+	public static Color GetTypeColor(PlayerCharacterType Type)
+	{
+		switch (Type)
+		{
+			case PlayerCharacterType.CT_Rogue:
+				return Color.red;
+			case PlayerCharacterType.CT_Fighter:
+				return Color.green;
+			case PlayerCharacterType.CT_Mage:
+				return Color.blue;
+			default:
+				return Color.white;
 		}
 	}
 }

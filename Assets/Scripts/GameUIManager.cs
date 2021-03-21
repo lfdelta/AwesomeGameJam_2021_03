@@ -5,15 +5,19 @@ using UnityEngine.UI;
 
 public class GameUIManager : MonoBehaviour
 {
-	public Canvas BaseCanvas;
 	public GameObject GameOverRoot;
 	public Text GameOverText;
 	public GameObject MenuRoot;
+
+	public GameObject HUDRoot;
+	public Text TurnCounter;
+	public Text CharacterText;
 
 	private float AnimateInTime = 1.0f;
 
 	public void EnterMainMenu()
 	{
+		ExitGameOver();
 		GameOverRoot.SetActive(false);
 		MenuRoot.SetActive(true);
 	}
@@ -30,9 +34,29 @@ public class GameUIManager : MonoBehaviour
 		StartCoroutine(AnimateInGameOver());
 	}
 
-	public void EndGameOver()
+	public void ExitGameOver()
 	{
+		StopCoroutine(AnimateInGameOver());
 		GameOverRoot.SetActive(false);
+	}
+
+	public void EnterGameplay()
+	{
+		ExitGameOver();
+		ExitMainMenu();
+	}
+
+	public void SetTurn(int Turn, int Max)
+	{
+		TurnCounter.text = string.Format("Turn: {0}/{1}", Turn, Max);
+	}
+
+	public void SetControlledCharacter(PlayerCharacter Character)
+	{
+		CharacterText.text = string.Format("{0}: {1}",
+			PlayerCharacterUtils.GetTypeString(Character.CharType),
+			Character.GetHasUsedAction() ? "Action used" : "Action available");
+		CharacterText.color = PlayerCharacterUtils.GetTypeColor(Character.CharType);
 	}
 
 	private IEnumerator AnimateInGameOver()

@@ -7,6 +7,7 @@ public class PlayerManager : MonoBehaviour
 {
 	private Dictionary<PlayerCharacterType, GameObject> PlayerChars;
 	private PlayerCharacterType ControlledChar;
+	private GameUIManager UIManager;
 
 	void Awake()
 	{
@@ -27,6 +28,12 @@ public class PlayerManager : MonoBehaviour
 
 		ControlledChar = PlayerCharacterType.CT_Rogue;
 		PlayerChars[ControlledChar].GetComponent<PlayerCharacter>().AcquireControl();
+	}
+
+	void Start()
+	{
+		UIManager = FindObjectOfType<GameUIManager>();
+		UIManager.SetControlledCharacter(PlayerChars[ControlledChar].GetComponent<PlayerCharacter>());
 	}
 
 	void OnDestroy()
@@ -90,8 +97,10 @@ public class PlayerManager : MonoBehaviour
 	private void ChangeCharacter(PlayerCharacterType NewType)
 	{
 		PlayerChars[ControlledChar].GetComponent<PlayerCharacter>().RemoveControl();
-		PlayerChars[NewType].GetComponent<PlayerCharacter>().AcquireControl();
+		PlayerCharacter newChar = PlayerChars[NewType].GetComponent<PlayerCharacter>();
+		newChar.AcquireControl();
 		ControlledChar = NewType;
+		UIManager.SetControlledCharacter(newChar);
 	}
 
 	public GameObject GetControlledCharacter()
