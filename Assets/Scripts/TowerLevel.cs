@@ -19,6 +19,7 @@ public class TowerLevel : MonoBehaviour
 	private PlayerManager PlayerMgr;
 	private Dictionary<int, List<Vector2Int>> FallingRocks;
 	private Dictionary<Vector2Int, Vector2Int> DoorUnlockDirs;
+	private Dictionary<Vector2Int, Interactable> InteractableTiles;
 
 	void Awake()
 	{
@@ -136,6 +137,23 @@ public class TowerLevel : MonoBehaviour
 			DoorUnlockDirs.Add(d.TilePos, d.TilePos + unlockFrom);
 		}
 
+		InteractableTiles = new Dictionary<Vector2Int, Interactable>();
+		Interactable[] interactables = FindObjectsOfType<Interactable>();
+		foreach (Interactable ixn in interactables)
+		{
+			InteractableTiles.Add(ixn.TilePos, ixn);
+		}
+		foreach (ChangeableTileBlockout c in FindObjectsOfType<ChangeableTileBlockout>())
+		{
+			for (int x = c.MinTile.x; x <= c.MaxTile.x; ++x)
+			{
+				for (int y = c.MinTile.y; y <= c.MaxTile.y; ++y)
+				{
+					LevelTiles[x, y] = c.StartType;
+				}
+			}
+		}
+
 		// Generate visual tiles based on the logical tiles
 		VisualTiles.Initialize();
 		for (int x = 0; x < LevelTileSize.x; ++x)
@@ -177,6 +195,10 @@ public class TowerLevel : MonoBehaviour
 		{
 			return false;
 		}
+		if (InteractableTiles.ContainsKey(new Vector2Int(X, Y)))
+		{
+			return false;
+		}
 		TileType t = LevelTiles[X - TileOrigin.x, Y - TileOrigin.y];
 		switch (t)
 		{
@@ -213,11 +235,19 @@ public class TowerLevel : MonoBehaviour
 		{
 			return false;
 		}
+		Vector2Int endPos = new Vector2Int(EndX, EndY);
+		if (InteractableTiles.ContainsKey(endPos))
+		{
+			if (InteractableTiles[endPos].TryInteract(Character))
+			{
+				return true;
+			}
+		}
 		TileType t = LevelTiles[EndX - TileOrigin.x, EndY - TileOrigin.y];
 		switch (t)
 		{
 			case TileType.TT_Door:
-				if (Character == PlayerCharacterType.CT_Rogue || DoorUnlockDirs[new Vector2Int(EndX, EndY)] == new Vector2Int(StartX, StartY))
+				if (Character == PlayerCharacterType.CT_Rogue || DoorUnlockDirs[endPos] == new Vector2Int(StartX, StartY))
 				{
 					ReplaceTileObject(TileType.TT_Open, EndX, EndY);
 					return true;
@@ -277,5 +307,16 @@ public class TowerLevel : MonoBehaviour
 		LevelTiles[X, Y] = Type;
 		Destroy(TileObjects[X, Y]);
 		TileObjects[X, Y] = VisualTiles.CreateTile(Type, X, Y);
+	}
+
+	public void ReplaceTiles(TileType Type, int StartX, int StartY, int EndX, int EndY)
+	{
+		for (int x = StartX; x <= EndX; ++x)
+		{
+			for (int y = StartY; y <= EndY; ++y)
+			{
+				ReplaceTileObject(Type, x, y);
+			}
+		}
 	}
 }
