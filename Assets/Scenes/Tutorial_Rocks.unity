@@ -946,7 +946,7 @@ MonoBehaviour:
   RogueSpawn: {x: 2, y: 3}
   FighterSpawn: {x: 2, y: 2}
   MageSpawn: {x: 2, y: 1}
-  AllowedTurns: 4
+  AllowedTurns: 5
 --- !u!4 &1458985594 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2918369166340301255, guid: 6e55056672dae4d7fae924ac1f26499b, type: 3}
