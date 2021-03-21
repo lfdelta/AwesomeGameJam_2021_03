@@ -29,6 +29,14 @@ public class PlayerManager : MonoBehaviour
 		PlayerChars[ControlledChar].GetComponent<PlayerCharacter>().AcquireControl();
 	}
 
+	void OnDestroy()
+	{
+		foreach (GameObject obj in PlayerChars.Values)
+		{
+			Destroy(obj);
+		}
+	}
+
 	void Update()
 	{
 		if (Input.GetButtonDown("SwitchRogue") && ControlledChar != PlayerCharacterType.CT_Rogue)

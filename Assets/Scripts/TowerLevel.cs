@@ -162,6 +162,14 @@ public class TowerLevel : MonoBehaviour
 			-10.0f);
 	}
 
+	void OnDestroy()
+	{
+		foreach (GameObject obj in TileObjects)
+		{
+			Destroy(obj);
+		}
+	}
+
 	public bool IsTileTraversable(PlayerCharacterType Character, int X, int Y)
 	{
 		if (X < TileOrigin.x || Y < TileOrigin.y ||
@@ -186,6 +194,16 @@ public class TowerLevel : MonoBehaviour
 				Debug.LogErrorFormat("IsTileValid found unexpected tile {0} at [{1}, {2}]", t.ToString(), X, Y);
 				return false;
 		}
+	}
+
+	public TileType GetTileType(Vector2Int Pos)
+	{
+		if (Pos.x < TileOrigin.x || Pos.y < TileOrigin.y ||
+			Pos.x >= TileOrigin.x + LevelTileSize.x || Pos.y >= TileOrigin.y + LevelTileSize.y)
+		{
+			return TileType.TT_Undefined;
+		}
+		return LevelTiles[Pos.x - TileOrigin.x, Pos.y - TileOrigin.y];
 	}
 
 	public bool TryInteract(PlayerCharacterType Character, int StartX, int StartY, int EndX, int EndY)

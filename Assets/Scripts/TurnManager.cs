@@ -20,12 +20,29 @@ public class TurnManager : MonoBehaviour
         if (Input.GetButtonDown("CompleteTurn"))
 		{
             Debug.Log("Ended turn " + TurnCount);
-            ++TurnCount;
-            foreach(PlayerCharacter pc in PlayerChars)
+
+            bool isWon = true;
+            foreach (PlayerCharacter pc in PlayerChars)
 			{
-                pc.IncrementTurn();
+                if (Level.GetTileType(pc.GetPosition()) != TileType.TT_LevelEnd)
+				{
+                    isWon = false;
+                    break;
+				}
 			}
-            Level.IncrementTurn(TurnCount - 1);
+            if (isWon)
+            {
+                FindObjectOfType<GameFlowManager>().MoveToNextLevel();
+            }
+            else
+            {
+                ++TurnCount;
+                foreach (PlayerCharacter pc in PlayerChars)
+                {
+                    pc.IncrementTurn();
+                }
+                Level.IncrementTurn(TurnCount - 1);
+            }
 		}
 	}
 

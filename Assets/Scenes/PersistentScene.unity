@@ -166,5 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df643322d11084413bc870778e04b785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MenuScene: MenuScene
   TowerLevels:
   - SampleScene
+  - SampleScene2

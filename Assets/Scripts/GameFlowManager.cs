@@ -5,11 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class GameFlowManager : MonoBehaviour
 {
+    public string MenuScene;
     public string[] TowerLevels;
 
     private int CurrLevel = 0;
-
-    private AsyncOperation AsyncSceneOp;
 
     void Awake()
     {
@@ -26,8 +25,7 @@ public class GameFlowManager : MonoBehaviour
 
     public void ReturnToMenu()
 	{
-        AsyncSceneOp = SceneManager.UnloadSceneAsync(TowerLevels[CurrLevel]);
-        StartCoroutine(WaitToReturnToMenu());
+        StartCoroutine(SwapLevel(TowerLevels[CurrLevel], MenuScene));
     }
 
     public void MoveToNextLevel()
@@ -39,32 +37,19 @@ public class GameFlowManager : MonoBehaviour
 		}
         else
 		{
-            AsyncSceneOp = SceneManager.UnloadSceneAsync(TowerLevels[CurrLevel - 1]);
-            StartCoroutine(WaitToLoadNextLevel());
+            StartCoroutine(SwapLevel(TowerLevels[CurrLevel - 1], TowerLevels[CurrLevel]));
 		}
 	}
 
-    private IEnumerator WaitToLoadNextLevel()
+    private IEnumerator SwapLevel(string Old, string New)
 	{
-        // TODO: loading screen?
-        while (!AsyncSceneOp.isDone)
+        // TODO: loading screen
+        AsyncOperation asyncSceneOp = SceneManager.UnloadSceneAsync(Old);
+        while (!asyncSceneOp.isDone)
 		{
             yield return null;
 		}
-        AsyncSceneOp = SceneManager.LoadSceneAsync(TowerLevels[CurrLevel], LoadSceneMode.Additive);
-		while (!AsyncSceneOp.isDone)
-		{
-            yield return null;
-		}
-	}
-
-    private IEnumerator WaitToReturnToMenu()
-	{
-        while (!AsyncSceneOp.isDone)
-        {
-            yield return null;
-        }
-        // TODO: load the menu scene
+        SceneManager.LoadSceneAsync(New, LoadSceneMode.Additive);
     }
 
     private void GameWon()
@@ -72,13 +57,12 @@ public class GameFlowManager : MonoBehaviour
         // TODO: actual display
         Debug.Log("YOU WON THE GAME!!! NICE WORK");
 
-        AsyncSceneOp = SceneManager.UnloadSceneAsync(TowerLevels[TowerLevels.Length - 1]);
-        StartCoroutine(WaitToReturnToMenu());
+        StartCoroutine(SwapLevel(TowerLevels[TowerLevels.Length - 1], MenuScene));
 	}
 
     public void GameOver(string Reason)
 	{
-        // TODO
+        // TODO: actual display
         Debug.LogFormat("GAME OVER!!! {0}", Reason);
     }
 }
