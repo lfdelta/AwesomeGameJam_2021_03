@@ -37,13 +37,13 @@ public class TurnManager : MonoBehaviour
             else
             {
                 ++TurnCount;
+                Level.IncrementTurn(TurnCount - 1);
                 foreach (PlayerCharacter pc in PlayerChars)
                 {
                     pc.IncrementTurn();
                 }
-                Level.IncrementTurn(TurnCount - 1);
             }
-		}
+        }
 	}
 
     public int GetTurnCount()

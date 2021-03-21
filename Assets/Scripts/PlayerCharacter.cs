@@ -14,10 +14,13 @@ public class PlayerCharacter : MonoBehaviour
     private bool IsControlled = false;
 
     private bool HasUsedAction = false;
-    private int MoveDistPerTurn;
+    private int MoveDistPerTurn = 0;
     private Vector2Int TurnStartPos;
 
-    void Start()
+    private GameObject[] WalkableTileOverlays;
+    private bool HasStarted = false;
+
+	void Start()
     {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
 
@@ -47,22 +50,148 @@ public class PlayerCharacter : MonoBehaviour
         Pos = Level.PlayerSpawns[CharType];
         TurnStartPos = Pos;
         UpdateWorldPosition();
+
+        HasStarted = true;
+        if (IsControlled)
+		{
+            DisplayWalkableTiles();
+		}
+    }
+
+    void OnDestroy()
+    {
+        if (WalkableTileOverlays != null)
+        {
+            foreach (GameObject obj in WalkableTileOverlays)
+            {
+                Destroy(obj);
+            }
+        }
+    }
+
+    private void GenerateWalkableTiles()
+	{
+        VisualTiles.Initialize();
+        int nReachableTiles = 1 + 2 * MoveDistPerTurn * (MoveDistPerTurn + 1);
+        WalkableTileOverlays = new GameObject[nReachableTiles];
+        for (int i = 0; i < nReachableTiles; ++i)
+        {
+            WalkableTileOverlays[i] = VisualTiles.CreateTileOverlay();
+            WalkableTileOverlays[i].SetActive(false);
+        }
+    }
+
+    private void DisplayWalkableTiles()
+	{
+        if (WalkableTileOverlays == null)
+        {
+            GenerateWalkableTiles();
+        }
+        Color c;
+        switch (CharType)
+        {
+            case PlayerCharacterType.CT_Rogue:
+                c = Color.red;
+                break;
+            case PlayerCharacterType.CT_Fighter:
+                c = Color.green;
+                break;
+            case PlayerCharacterType.CT_Mage:
+                c = Color.blue;
+                break;
+            default:
+                c = Color.white;
+                break;
+        }
+        float z = transform.position.z - 0.1f;
+        WalkableTileOverlays[0].SetActive(true);
+        WalkableTileOverlays[0].GetComponent<SpriteRenderer>().color = c;
+        WalkableTileOverlays[0].transform.position = new Vector3(TurnStartPos.x * TileUtils.TileSize, TurnStartPos.y * TileUtils.TileSize, z);
+        int i = 1;
+        for (int k = 1; k <= MoveDistPerTurn; ++k)
+        {
+            c.a = 1.0f - (float)k / (float)(MoveDistPerTurn + 1);
+            for (int x = k; x > 0; --x)
+            {
+                int y = k - x;
+                if (Level.IsTileTraversable(CharType, TurnStartPos.x + x, TurnStartPos.y + y))
+                {
+                    WalkableTileOverlays[i].SetActive(true);
+                    WalkableTileOverlays[i].GetComponent<SpriteRenderer>().color = c;
+                    WalkableTileOverlays[i].transform.position = new Vector3((TurnStartPos.x + x) * TileUtils.TileSize, (TurnStartPos.y + y) * TileUtils.TileSize, z);
+                }
+                else
+				{
+                    WalkableTileOverlays[i].SetActive(false);
+				}
+                ++i;
+                if (Level.IsTileTraversable(CharType, TurnStartPos.x + y, TurnStartPos.y - x))
+                {
+                    WalkableTileOverlays[i].SetActive(true);
+                    WalkableTileOverlays[i].GetComponent<SpriteRenderer>().color = c;
+                    WalkableTileOverlays[i].transform.position = new Vector3((TurnStartPos.x + y) * TileUtils.TileSize, (TurnStartPos.y - x) * TileUtils.TileSize, z);
+                }
+                else
+                {
+                    WalkableTileOverlays[i].SetActive(false);
+                }
+                ++i;
+                if (Level.IsTileTraversable(CharType, TurnStartPos.x - x, TurnStartPos.y - y))
+                {
+                    WalkableTileOverlays[i].SetActive(true);
+                    WalkableTileOverlays[i].GetComponent<SpriteRenderer>().color = c;
+                    WalkableTileOverlays[i].transform.position = new Vector3((TurnStartPos.x - x) * TileUtils.TileSize, (TurnStartPos.y - y) * TileUtils.TileSize, z);
+                }
+                else
+                {
+                    WalkableTileOverlays[i].SetActive(false);
+                }
+                ++i;
+                if (Level.IsTileTraversable(CharType, TurnStartPos.x - y, TurnStartPos.y + x))
+                {
+                    WalkableTileOverlays[i].SetActive(true);
+                    WalkableTileOverlays[i].GetComponent<SpriteRenderer>().color = c;
+                    WalkableTileOverlays[i].transform.position = new Vector3((TurnStartPos.x - y) * TileUtils.TileSize, (TurnStartPos.y + x) * TileUtils.TileSize, z);
+                }
+                else
+                {
+                    WalkableTileOverlays[i].SetActive(false);
+                }
+                ++i;
+            }
+        }
+        if (i != WalkableTileOverlays.Length)
+        {
+            Debug.LogErrorFormat("Only processed {0} WalkableTileOverlay sprites, expected {1}", i, WalkableTileOverlays.Length);
+        }
     }
 
     public void RemoveControl()
 	{
         IsControlled = false;
-	}
+        foreach (GameObject obj in WalkableTileOverlays)
+        {
+            obj.SetActive(false);
+        }
+    }
 
     public void AcquireControl()
 	{
         IsControlled = true;
-	}
+        if (HasStarted)
+        {
+            DisplayWalkableTiles();
+        }
+    }
 
     public void IncrementTurn()
 	{
         TurnStartPos = Pos;
         HasUsedAction = false;
+        if (IsControlled)
+		{
+            DisplayWalkableTiles();
+		}
 	}
 
     public Vector2Int GetPosition()
