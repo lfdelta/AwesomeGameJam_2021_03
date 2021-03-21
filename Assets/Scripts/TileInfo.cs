@@ -6,7 +6,8 @@ public enum TileType
 	TT_Wall = 2,
 	TT_Door = 3,
 	TT_Breakable = 4,
-	TT_MagePassable = 5
+	TT_MagePassable = 5,
+	TT_LevelEnd = 6,
 }
 
 abstract class TileUtils

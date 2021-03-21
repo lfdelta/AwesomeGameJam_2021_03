@@ -142,7 +142,10 @@ public class TowerLevel : MonoBehaviour
 		{
 			for (int y = 0; y < LevelTileSize.y; ++y)
 			{
-				TileObjects[x, y] = VisualTiles.CreateTile(LevelTiles[x, y], TileOrigin.x + x, TileOrigin.y + y);
+				if (LevelTiles[x, y] != TileType.TT_Undefined)
+				{
+					TileObjects[x, y] = VisualTiles.CreateTile(LevelTiles[x, y], TileOrigin.x + x, TileOrigin.y + y);
+				}
 			}
 		}
 
@@ -175,6 +178,7 @@ public class TowerLevel : MonoBehaviour
 			case TileType.TT_Breakable:
 				return false;
 			case TileType.TT_Open:
+			case TileType.TT_LevelEnd:
 				return true;
 			case TileType.TT_MagePassable:
 				return Character == PlayerCharacterType.CT_Mage;
@@ -211,6 +215,8 @@ public class TowerLevel : MonoBehaviour
 			case TileType.TT_Wall:
 			case TileType.TT_Open:
 			case TileType.TT_MagePassable:
+			case TileType.TT_Undefined:
+			case TileType.TT_LevelEnd:
 				return false;
 			default:
 				Debug.LogErrorFormat("TryInteract found unexpected tile {0} at [{1}, {2}]", t.ToString(), EndX, EndY);
@@ -234,7 +240,7 @@ public class TowerLevel : MonoBehaviour
 				{
 					if (rockPos == playerPos)
 					{
-						Debug.Log("GAME OVER!!! Hit by falling rock");
+						FindObjectOfType<GameFlowManager>().GameOver(string.Format("{0} hit by a falling rock!", pc.CharType.ToString()));
 						// TODO: actually game over
 						return;
 					}
@@ -244,7 +250,7 @@ public class TowerLevel : MonoBehaviour
 
 		if (CompletedTurnNumber >= AllowedTurns)
 		{
-			Debug.Log("GAME OVER!!! Out of turns");
+			FindObjectOfType<GameFlowManager>().GameOver("Out of turns!");
 			// TODO: actually game over
 		}
 	}
