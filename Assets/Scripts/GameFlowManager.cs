@@ -6,10 +6,14 @@ using UnityEngine.SceneManagement;
 public class GameFlowManager : MonoBehaviour
 {
     public string[] TowerLevels;
-    public GameUIManager UIManager;
+    
+    public AudioClip MainMusic;
 
     private int CurrLevel = 0;
     private bool IsGameOver = false;
+
+    private GameUIManager UIManager;
+    private AudioSource MusicLoop;
 
     public static bool GetIsGameOver()
 	{
@@ -20,6 +24,11 @@ public class GameFlowManager : MonoBehaviour
 	{
         UIManager = FindObjectOfType<GameUIManager>();
         UIManager.EnterMainMenu();
+        
+        MusicLoop = gameObject.AddComponent<AudioSource>();
+        MusicLoop.clip = MainMusic;
+        MusicLoop.loop = true;
+        MusicLoop.Play();
     }
 
     public void EnterGameFromMenu()
