@@ -832,6 +832,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TowerLevels:
   - Tutorial_ClearLevel
+  - Tester
   - SampleScene
   - SampleScene2
   UIManager: {fileID: 0}
