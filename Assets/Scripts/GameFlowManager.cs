@@ -7,12 +7,14 @@ public class GameFlowManager : MonoBehaviour
 {
     public string MenuScene;
     public string[] TowerLevels;
+    public GameUIManager UIManager;
 
     private int CurrLevel = 0;
 
-    void Awake()
-    {
+    void Start()
+	{
         // TODO: set up menu screen
+        UIManager = FindObjectOfType<GameUIManager>();
         EnterGameFromMenu();
     }
 
@@ -20,6 +22,7 @@ public class GameFlowManager : MonoBehaviour
 	{
         CurrLevel = 0;
         SceneManager.LoadScene(TowerLevels[0], LoadSceneMode.Additive);
+        UIManager.BaseCanvas.worldCamera = Camera.main;
         // TODO: any intro stuff
 	}
 
@@ -50,6 +53,11 @@ public class GameFlowManager : MonoBehaviour
             yield return null;
 		}
         SceneManager.LoadSceneAsync(New, LoadSceneMode.Additive);
+        while (!asyncSceneOp.isDone)
+		{
+            yield return null;
+		}
+        UIManager.BaseCanvas.worldCamera = Camera.main;
     }
 
     private void GameWon()
@@ -62,7 +70,6 @@ public class GameFlowManager : MonoBehaviour
 
     public void GameOver(string Reason)
 	{
-        // TODO: actual display
-        Debug.LogFormat("GAME OVER!!! {0}", Reason);
+        UIManager.StartGameOver(Reason);
     }
 }
