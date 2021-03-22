@@ -834,6 +834,7 @@ MonoBehaviour:
   - Tutorial_ClearLevel
   - Tester
   - Tutorial_Rocks
+  - Tutorial_Lever
   - SampleScene
   - SampleScene2
   MainMusic: {fileID: 8300000, guid: decf9020e721844dbbbbb1c2446ff39c, type: 3}
