@@ -31,15 +31,15 @@ public class PlayerCharacter : MonoBehaviour
         {
             case PlayerCharacterType.CT_Rogue:
                 MoveDistPerTurn = 3;
-                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Character/Kobold/kobold_5.png", typeof(Texture2D));
+                tex = FindObjectOfType<GameAssets>().Rogue;
                 break;
             case PlayerCharacterType.CT_Fighter:
                 MoveDistPerTurn = 2;
-                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Character/Goblin/goblin_1.png", typeof(Texture2D));
+                tex = FindObjectOfType<GameAssets>().Fighter;
                 break;
             case PlayerCharacterType.CT_Mage:
                 MoveDistPerTurn = 2;
-                tex = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Character/Ghost/ghost_3.png", typeof(Texture2D));
+                tex = FindObjectOfType<GameAssets>().Mage;
                 break;
             default:
                 MoveDistPerTurn = 0;

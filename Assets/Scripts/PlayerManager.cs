@@ -11,7 +11,7 @@ public class PlayerManager : MonoBehaviour
 
 	void Awake()
 	{
-		GameObject playerPrefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/GameObjects/PlayerCharacter.prefab", typeof(GameObject));
+		GameObject playerPrefab = FindObjectOfType<GameAssets>().PlayerPrefab;
 		PlayerChars = new Dictionary<PlayerCharacterType, GameObject>();
 
 		GameObject rogue = Instantiate(playerPrefab);

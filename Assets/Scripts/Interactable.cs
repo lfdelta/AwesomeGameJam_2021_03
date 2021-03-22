@@ -61,7 +61,6 @@ public class Interactable : MonoBehaviour
 		{
             AffectedTiles.SwapTiles();
             HasInteracted = true;
-            Renderer.enabled = false;
 		}
         return succ;
 	}

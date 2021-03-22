@@ -15,23 +15,18 @@ public class VisualTiles : MonoBehaviour
         if (Initialized)
 		{
             return;
-		}
-        TilePrefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/GameObjects/TileSprite.prefab", typeof(GameObject));
-
+		}        
+        GameAssets assets = FindObjectOfType<GameAssets>();
+        TilePrefab = assets.TilePrefab;
         Assets = new Dictionary<TileType, Texture2D[]>();
-        Assets[TileType.TT_Open] = new Texture2D[]
-            {
-                (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/tile_1.png", typeof(Texture2D)),
-                (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/tile_2.png", typeof(Texture2D)),
-                (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/tile_3.png", typeof(Texture2D)),
-            };
-        Assets[TileType.TT_Wall] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/wall_1.png", typeof(Texture2D)) };
-        Assets[TileType.TT_MagePassable] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/mage_wall_1.png", typeof(Texture2D)) };
-        Assets[TileType.TT_Breakable] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/fallen_rock_1.png", typeof(Texture2D)) };
-        Assets[TileType.TT_Door] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/door_front_view_1.png", typeof(Texture2D)) };
-        Assets[TileType.TT_LevelEnd] = new Texture2D[] { (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/exit_1.png", typeof(Texture2D)) };
+        Assets[TileType.TT_Open] = assets.FloorTiles;
+        Assets[TileType.TT_Wall] = assets.WallTiles;
+        Assets[TileType.TT_MagePassable] = assets.MagePassableTiles;
+        Assets[TileType.TT_Breakable] = assets.BreakableTiles;
+        Assets[TileType.TT_Door] = assets.DoorTiles;
+        Assets[TileType.TT_LevelEnd] = assets.LevelEndTiles;
 
-        WalkableTileAsset = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Art/Environment/walkable_tile_overlay.png", typeof(Texture2D));
+        WalkableTileAsset = assets.WalkableTileOverlay;
         Initialized = true;
 	}
 

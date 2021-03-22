@@ -797,6 +797,7 @@ GameObject:
   - component: {fileID: 841865039}
   - component: {fileID: 841865040}
   - component: {fileID: 841865041}
+  - component: {fileID: 841865042}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -854,6 +855,38 @@ MonoBehaviour:
   HUDRoot: {fileID: 1911971895}
   TurnCounter: {fileID: 357835588}
   CharacterText: {fileID: 180952299}
+--- !u!114 &841865042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841865038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f000a8d1cf3ae45479d214b35cc4049c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Rogue: {fileID: 2800000, guid: 83decdd09fc9542bb826a600931f5392, type: 3}
+  Fighter: {fileID: 2800000, guid: b0b0eb50de0d140b092f4545d6761a1a, type: 3}
+  Mage: {fileID: 2800000, guid: 2cd80d276ef67421abd3b242d521710f, type: 3}
+  FloorTiles:
+  - {fileID: 2800000, guid: 160e2713251694e2c8a5018df4ec1f41, type: 3}
+  - {fileID: 2800000, guid: 0d6efb6d60a05452198d2833425a07dd, type: 3}
+  - {fileID: 2800000, guid: 5dcebd44b6eba41959dc3ef7437b3a8c, type: 3}
+  WallTiles:
+  - {fileID: 2800000, guid: ee157b64f0ace425ba25dc7ba199bdfd, type: 3}
+  BreakableTiles:
+  - {fileID: 2800000, guid: 8b87f4e793d9d40c0852f400ce1f4362, type: 3}
+  MagePassableTiles:
+  - {fileID: 2800000, guid: b8a46a49b3276400382bbc92a265428a, type: 3}
+  DoorTiles:
+  - {fileID: 2800000, guid: d3418334715234ffdbd18c3c313e5cd8, type: 3}
+  LevelEndTiles:
+  - {fileID: 2800000, guid: a924ff9411e6c4bd1a5fb96882524229, type: 3}
+  WalkableTileOverlay: {fileID: 2800000, guid: e0d46ad72395143eea99b22eba7d581a, type: 3}
+  TilePrefab: {fileID: 7480447374868898314, guid: fd7dd35316f614816a2216c5ede885a4, type: 3}
+  PlayerPrefab: {fileID: 869388575800824624, guid: 756ef63530be94c49b02f8e8c23b6e6f, type: 3}
 --- !u!1 &1049113828
 GameObject:
   m_ObjectHideFlags: 0
